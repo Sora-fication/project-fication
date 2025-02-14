@@ -25,10 +25,30 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x   
+        dotnet-version: 8.0.x
+        
+    # Cache NuGet packages to speed up restore
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/dotnetapp/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-    
         
     - name: Restore dependencies
       run: dotnet restore dotnetapp/dotnetapp.sln
+
+    # Cache build outputs to speed up future builds
+    - name: Cache build outputs
+      uses: actions/cache@v4
+      with:
+        path: |
+          dotnetapp/bin
+          dotnetapp/obj
+        key: ${{ runner.os }}-build-${{ hashFiles('**/dotnetapp/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-build-  
 
     - name: Build
       run: dotnet build --no-restore dotnetapp/dotnetapp.sln
