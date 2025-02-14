@@ -1,0 +1,20 @@
+# Ignore build and obj folders
+bin/
+obj/
+
+# Ignore Visual Studio specific files
+.vscode/
+.idea/
+
+# Ignore package manager directories
+node_modules/
+
+# Ignore libraries under wwwroot (external libraries like bootstrap)
+wwwroot/lib/
+
+# Ignore configuration and environment files (optional)
+.env
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
