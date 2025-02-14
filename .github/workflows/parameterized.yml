@@ -1,0 +1,98 @@
+name: Dotnet App CI Parameterized
+
+on:
+  workflow_call:
+    inputs:
+      dotnet_version:
+        description: 'Dotnet version to use'
+        required: false
+        default: '8.0.x'
+        type: string
+      solution_path:
+        description: 'Path to the .NET solution file'
+        required: false
+        default: 'dotnetapp/dotnetapp.sln'
+        type: string
+      project_path:
+        description: 'Path to the .NET project file'
+        required: false
+        default: 'dotnetapp/dotnetapp.csproj'
+        type: string
+      publish_output:
+        description: 'Path where the application should be published'
+        required: false
+        default: './publish'
+        type: string
+      artifact_name:
+        description: 'Name of the artifact to be uploaded'
+        required: false
+        default: 'MyApp-Build'
+        type: string
+
+permissions:
+  security-events: write
+  contents: read
+  actions: read
+  checks: write  
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ inputs.dotnet_version }}
+        
+    - name: Restore dependencies
+      run: dotnet restore ${{ inputs.solution_path }}
+
+    # Cache build outputs to speed up future builds
+    - name: Cache build outputs
+      uses: actions/cache@v4
+      with:
+        path: |
+          dotnetapp/bin
+          dotnetapp/obj
+        key: ${{ runner.os }}-build-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-build-  
+
+    - name: Build
+      run: dotnet build --no-restore ${{ inputs.solution_path }}
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal ${{ inputs.solution_path }}
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: csharp
+
+    - name: Build for CodeQL Analysis
+      run: dotnet build ${{ inputs.project_path }} --configuration Release    
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+
+    - name: Publish build artifacts
+      run: dotnet publish ${{ inputs.project_path }} -c Release -o ${{ inputs.publish_output }}
+
+    - name: List contents of publish directory
+      run: ls -al ${{ inputs.publish_output }}
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact_name }}
+        path: ${{ inputs.publish_output }}
+
+    - name: Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ inputs.artifact_name }}
+        path: ./artifacts/downloaded
