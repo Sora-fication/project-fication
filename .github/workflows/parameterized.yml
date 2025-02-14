@@ -1,4 +1,4 @@
-name: Java App CI with Maven and CodeQL
+name: Java App CI Parameterized
 
 on:
   workflow_call:
