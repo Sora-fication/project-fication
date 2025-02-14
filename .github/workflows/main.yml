@@ -3,6 +3,12 @@ name: Java App CI with Maven and CodeQL
 on:
   workflow_dispatch:
 
+permissions:
+  security-events: write
+  contents: read
+  actions: read
+  checks: write
+
 jobs:
   # Build job
   build:
