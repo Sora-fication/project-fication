@@ -49,4 +49,6 @@ jobs:
       #   category: 'security'
     
     - name: Upload CodeQL results
-      uses: github/codeql-action/upload-results@v3
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ${{ github.workspace }}/codeql-results.sarif  
