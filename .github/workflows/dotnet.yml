@@ -1,0 +1,68 @@
+name: Dotnet App CI with CodeQL
+
+on:
+  push:
+    branches:
+      - dotnet-app
+  pull_request:
+    branches:
+      - dotnet-app
+
+permissions:
+  security-events: write
+  contents: read
+  actions: read
+  checks: write  
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x   
+        
+    - name: Restore dependencies
+      run: dotnet restore dotnetapp/dotnetapp.sln
+
+    - name: Build
+      run: dotnet build --no-restore dotnetapp/dotnetapp.sln
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal dotnetapp/dotnetapp.sln
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: csharp
+
+    - name: Build for CodeQL Analysis
+      run: dotnet build dotnetapp/dotnetapp.csproj --configuration Release    
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+
+    - name: Publish build artifacts
+      run: dotnet publish dotnetapp/dotnetapp.csproj -c Release -o ./publish
+
+    - name: List contents of publish directory
+      run: ls -al ./publish
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MyApp-Build
+        path: ./publish
+
+    - name: Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: MyApp-Build
+        path: ./artifacts/downloaded
+
+#end
