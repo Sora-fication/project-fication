@@ -5,7 +5,7 @@ on:
 
 jobs:
   call-java-app-ci:
-    uses: ./.github/workflows/parameterized.yml  # Path to the reusable Java App CI workflow
+    uses: ./.github/workflows/parameterized-java.yml  # Path to the reusable Java App CI workflow
     with:
       java_version: '17'
       maven_directory: './java-app'
