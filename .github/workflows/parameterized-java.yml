@@ -1,4 +1,4 @@
-name: Java App CI Parameterized
+name: Java App Param in feature branch
 
 on:
   workflow_call:
