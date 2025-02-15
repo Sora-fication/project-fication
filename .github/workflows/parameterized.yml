@@ -65,3 +65,5 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         output: codeql-results.sarif
+
+#endoffile
