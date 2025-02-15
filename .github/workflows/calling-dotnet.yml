@@ -8,7 +8,7 @@ on:
 
 jobs:
   trigger-dotnet-ci:
-    uses: ./.github/workflows/parameterized.yml  # Path to the reusable workflow
+    uses: ./.github/workflows/parameterized-dotnet.yml  # Path to the reusable workflow
     with:
       dotnet_version: '8.0.x'
       solution_path: 'dotnetapp/dotnetapp.sln'
