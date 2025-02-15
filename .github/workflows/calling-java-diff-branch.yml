@@ -1,0 +1,23 @@
+name: Trigger/Call Java App from Diff Branch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-java-from-diff-branch:
+    runs-on: ubuntu-latest  # Specify the runner environment
+    steps:
+      - name: Checkout the target branch
+        uses: actions/checkout@v4  # Use the checkout action to clone the repository
+        with:
+          ref: feature-branch  # Checkout the specific branch
+
+      - name: Run the reusable workflow
+        run: |
+          echo "Running reusable workflow from feature-branch"
+          gh workflow run reusable-workflow.yml \
+            --ref feature-branch \
+            -f java_version=17 \
+            -f maven_directory=./java-app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
