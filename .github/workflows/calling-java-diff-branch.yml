@@ -15,7 +15,7 @@ jobs:
       - name: Run the reusable workflow
         run: |
           echo "Running reusable workflow from feature-branch"
-          gh workflow run reusable-workflow.yml \
+          gh workflow run .github/workflows/reusable-workflow.yml \
             --ref feature-branch \
             -f java_version=17 \
             -f maven_directory=./java-app
