@@ -1,0 +1,13 @@
+name: Trigger/Call Java App from Diff Repo
+
+on:
+  push:
+    branches:
+      feature-branch
+
+jobs:
+  call-java-from-diff-repo:
+    uses: Sora-fication/project1-fication/.github/workflows/reusable-workflow.yml@featured  # Path to the reusable Java App CI workflow
+    with:
+      java_version: '17'
+      maven_directory: './java-app'
