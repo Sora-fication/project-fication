@@ -28,10 +28,6 @@ jobs:
     steps:
     - name: Checkout the correct repository
       uses: actions/checkout@v4
-      with:
-        repository: Sora-fication/project-fication  # Explicitly check out this repo
-        ref: main  # Ensure you're on the correct branch
-        # token: ${{ secrets.GITHUB_TOKEN }}  # Use a token if needed for private repos
 
     - name: Set up JDK
       uses: actions/setup-java@v3
@@ -58,10 +54,6 @@ jobs:
     steps:
     - name: Checkout the correct repository
       uses: actions/checkout@v4
-      with:
-        repository: Sora-fication/project-fication  # Explicitly check out this repo
-        ref: main  # Ensure you're on the correct branch
-        # token: ${{ secrets.GITHUB_TOKEN }}  # Use a token if needed for private repos
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
@@ -71,23 +63,7 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
-      with: 
-        upload: false
-
-    - name: Checkout the calling repository (project1-fication)
-      uses: actions/checkout@v4
       with:
-        repository: Sora-fication/project1-fication  # Ensure it's the correct repo
-        ref: main
-
-    - name: Upload CodeQL results
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: codeql-results.sarif/java.sarif    
-
-    # - name: Perform CodeQL Analysis
-    #   uses: github/codeql-action/analyze@v3
-    #   with:
-    #     output: codeql-results.sarif
+        output: codeql-results.sarif
 
 #endoffile
