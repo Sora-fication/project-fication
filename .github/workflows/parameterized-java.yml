@@ -70,7 +70,9 @@ jobs:
         build-mode: autobuild
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3    
+      uses: github/codeql-action/analyze@v3
+      with: 
+        upload: false
 
     - name: Checkout the calling repository (project1-fication)
       uses: actions/checkout@v4
